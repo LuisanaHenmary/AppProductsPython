@@ -14,7 +14,7 @@ class SubmitButton(tkr.Button):
             text: Texto del boton.
             command: Funcion que se ejecuta al presinarlo.
             spancol: Es para determinar cuantas columnas puede ocupar.
-            i: Fila en que se en la grilla.
+            i: Fila en que se ubica en la grilla.
         """
         super().__init__(container, text = text, command = command)
         #Ubicacion en la grilla

@@ -74,10 +74,9 @@ class EditWindow(tkr.Toplevel):
 
             self: Es para acceder a cualquier atributo o metodo de la clase.
         """
-
-        if(self.__new_name.get_length() > 0 and self.__new_price.get_length() > 0):
-            return True
-        return False
+        
+        return self.__new_name.get_length() > 0 and self.__new_price.get_length() > 0
+       
         
     def edit_record(self, update_function):
         """

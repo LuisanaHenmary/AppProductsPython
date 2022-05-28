@@ -3,8 +3,9 @@ import tkinter as tkr
 class Panel:
     #Esta clase es para crear un objecto que sirve como componente para la aplicacion
     """
-        Muestra los botones para borrar y editar
+        Muestra los botones para borrar y editar.
     """
+    
     def __init__(self, delete_command, edit_command):
         """
             Inicializa el objecto y lo ubica en la grilla.
