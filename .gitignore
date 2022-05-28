@@ -1,0 +1,4 @@
+#base de datos
+database.db
+/components/__pycache__
+/utils/__pycache__
