@@ -1,16 +1,19 @@
 import tkinter as tkr
 
 class Root(tkr.Tk):
-    #Esta clase es para crear un objecto que sirve como componente para la aplicacion
+    #This class is for creating an object that serves as a component for the application.
     """
-        Es la ventana principal.
+        It is the main window.
     """
     def __init__(self):
         """
-            Inicializa el objecto y lo ubica.
+            Initialize the object.
 
-             self: Es para acceder a cualquier atributo o metodo de la clase.
+             self: It is to access any attribute or method of the class.
         """
+        #Overload the parent constructor.
         super().__init__()
-        super().title("Products Aplication") #Titulo para la aplicacion.
-        self.resizable(False, False) #Para que no se ajuste el tamaño.
+        #Title for the application.
+        super().title("Products Aplication")
+        #So that the size is not adjusted.
+        self.resizable(False, False) 

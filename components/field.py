@@ -1,110 +1,93 @@
 import tkinter as tkr
 
 class Field:
-    #Esta clase es para crear un objecto que sirve como componente para la aplicacion
+    #This class is for creating an object that serves as a component for the application.
     """
-        Es un campo de texto con su propia etiqueta.
+        It is a text field, with its own label, used to enter a value.
 
-        __value: Es el valor del campo de texto.
+        __value: It is the value of the text field.
     """
     __value = 0
 
-    def __init__(self, containe, name, i, j, focus=False):
+    def __init__(self, container, name, i, j, focus=False):
         """
-            Inicializa el objecto y lo ubica.
+            Initializes the object and places it in the grid.
 
-            self: Es para acceder a cualquier atributo o metodo de la clase.
-            containe: Contenedor del campo.
-            name: Nombre para la etiqueta.
-            i: Fila en que se ubica en la grilla.
-            j: Columna en que se ubica en la grilla.
-            focus: Determina si comienza enfocado.
+            self: It is to access any attribute or method of the class.
+            container: Receives a widget object that is the container for everything.
+            name: Receives a string that is the name of the field.
+            i: Receives an integer that is the row in which it is located in the grid.
+            j: Receives an integer that is the column in which it is located in the grid.
+            focus: Receives a boolean that determines whether to start with focus.
         """
 
-        #La etiqueta
-        tkr.Label(containe, text = name).grid(row = i, column = j)
-        #El campo de texto
-        self.__value = tkr.Entry(containe)
+        #The label.
+        tkr.Label(container, text = name).grid(row = i, column = j)
+        #The text field.
+        self.__value = tkr.Entry(container)
         if(focus):
             self.__value.focus()
-        #ubicacion en la grilla
+        #Location in the grid.
         self.__value.grid(row = i, column = j + 1)
         
 
     def get_value(self):
         """
-            Devuelve el valor que se ingreso en el
-            campo de texto.
+            Returns the value that was entered in the
+            text field.
 
-            self: Es para acceder a cualquier atributo o metodo de la clase.
+            self: It is to access any attribute or method of the class.
         """
         return self.__value.get()
 
-    def get_length(self):
-        """
-            Devuelve la longitud fel valor que se 
-            ingreso en el campo de texto.
-
-            self: Es para acceder a cualquier atributo o metodo de la clase.
-        """
-        return len(self.__value.get())
-
     def reboot(self):
         """
-            Reinicia el campo de texto a una cadena vacia.
+            Resets the text field to an empty string.
 
-            self: Es para acceder a cualquier atributo o metodo de la clase.
+            self: It is to access any attribute or method of the class.
         """
         self.__value.delete(0,tkr.END)
 
+
 class FieldEdit:
-    #Esta clase es para crear un objecto que sirve como componente para la aplicacion
+    #This class is for creating an object that serves as a component for the application.
     """
-        Es un campo que muestra el viejo valor de un producto
-        y tiene un campo de texto para ingresar un nuevo valor.
+        It is a field that shows the old value of a product
+        and has a text field to enter a new value.
 
-        __new_value: Representa el nuevo valor que se ingresa.
+        __new_value: It is the new value that is entered.
     """
 
-    def __init__(self, containe, name, old_value, i, j):
+    def __init__(self, container, name, old_value, i, j):
         """
-            Inicializa el objecto y lo ubica
+            Initializes the object and places it in the grid.
 
-            self: Es para acceder a cualquier atributo o metodo de la clase.
-            containe: Contenedor del campo.
-            name: Nombre para la etiqueta
-            old_value: El viejo valor
-            i: Fila en que se en la grilla
-            j: Columna en que se en la grilla
+            self: It is to access any attribute or method of the class.
+            container: Receives a widget object that is the container for everything.
+            name: Receives a string that is the name of the field.
+            old_value: Receive a string that is the old value.
+            i: Receives an integer that is the row in which it is located in the grid.
+            j: Receives an integer that is the column in which it is located in the grid.
         """
-        #La etiqueta
-        tkr.Label(containe, text = name).grid(row = i, column = j)
+        #The label.
+        tkr.Label(container, text = name).grid(row = i, column = j)
 
-        #Un indicador de viejo valor
+        #An old value indicator that is not altered.
         tkr.Entry(
-            containe,
+            container,
             text = f"Old {name}",
-            textvariable = tkr.StringVar(containe, value = old_value),
+            textvariable = tkr.StringVar(container, value = old_value),
             state = 'readonly' 
         ).grid(row = i, column = j + 1)
 
-        #Campo de texto para ingresar el nuevo valor
-        self.__new_value = Field(containe = containe, name = f"New {name}", i = i + 1, j = j)
+        # Text field to enter the new value.
+        self.__new_value = Field(container = container, name = f"New {name}", i = i + 1, j = j)
 
     def get_value(self):
         """
-            Devuelve el valor que se ingreso en el
-            campo de texto.
+            Returns the new value that was entered in the
+            text field.
 
-            self: Es para acceder a cualquier atributo o metodo de la clase.
+            self: It is to access any attribute or method of the class.
         """
         return self.__new_value.get_value()
-
-    def get_length(self):
-        """
-            Devuelve la longitud fel valor que se 
-            ingreso en el campo de texto.
-
-            self: Es para acceder a cualquier atributo o metodo de la clase.
-        """
-        return self.__new_value.get_length()

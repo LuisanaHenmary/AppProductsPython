@@ -1,19 +1,17 @@
 import sqlite3
 
 """
-    Este archivo crea una base de datos y una
-    tabla llamada product, con sus campos. solo
-    es necesario ejecutarlo una vez.
+    This file creates a database and a
+    table called product, with its fields. only
+    you need to run it once.
 """
 
-#Si en utils no existe la base de datos la crea
-#Pero si existe hace la conexion.
-conexion = sqlite3.connect("./utils/database.db") 
+#If the database is not created, but if it exists, it makes the connection.
+Connection = sqlite3.connect("./utils/database.db") 
 
-cursor = conexion.cursor()
+cursor = Connection.cursor()
 
-#Trata de crear la tabla, solo falla si la tabla
-#existe.
+#Try to create the table, only fails if the table already exists.
 try:
     cursor.execute("""
         CREATE TABLE product (
@@ -27,5 +25,5 @@ except Exception as e:
     print(f"{type(e).__name__}: {e}")
     
 
-
-conexion.close()
+#close the connection.
+Connection.close()

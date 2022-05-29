@@ -1,21 +1,21 @@
 import tkinter as tkr
 
 class Panel:
-    #Esta clase es para crear un objecto que sirve como componente para la aplicacion
+    #This class is for creating an object that serves as a component for the application.
     """
-        Muestra los botones para borrar y editar.
+        Shows the buttons to delete and edit.
     """
     
     def __init__(self, delete_command, edit_command):
         """
-            Inicializa el objecto y lo ubica en la grilla.
+            Initializes the object and places it in the grid.
 
-             self: Es para acceder a cualquier atributo o metodo de la clase.
-             delete_command: Una funcion que sirve para el boton de borrado.
-             edit_command: Una funcion que sirve para el boton de editar.
+             self: It is to access any attribute or method of the class.
+             delete_command: Receive a function that is executed when pressing the delete button.
+             edit_command: Receive a function that is executed when pressing the edit button.
         """
 
-        #Boton de borrar
+       #Delete button.
         tkr.Button(
             text = "DELETE",
             command = delete_command
@@ -25,7 +25,7 @@ class Panel:
             sticky = tkr.W + tkr.E
         )
 
-        #Boton de editar
+        #Edit button.
         tkr.Button(
             text = "EDIT",
             command = edit_command

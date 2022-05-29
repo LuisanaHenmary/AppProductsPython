@@ -1,17 +1,18 @@
 import tkinter as tkr
 
 class Message(tkr.Label):
-    #Esta clase es para crear un objecto que sirve como componente para la aplicacion
+    #This class is for creating an object that serves as a component for the application.
     """
-        Es para mostrar un mensaje si se hizo
-        una accion.
+        It is to show a message if it was done or not
+        an action.
     """
     def __init__(self):
         """
-            Inicializa el objecto y lo ubica.
+            Initializes the object and places it in the grid.
 
-             self: Es para acceder a cualquier atributo o metodo de la clase.
+             self: It is to access any attribute or method of the class.
         """
+        #Overload the parent constructor.
         super().__init__(text = "", fg = "red")
-        #Ubicacion en la grilla
+        #Location on the grid.
         self.grid(row = 3, column = 0, columnspan = 2, sticky = tkr.W + tkr.E)

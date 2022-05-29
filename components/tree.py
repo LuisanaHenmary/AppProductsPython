@@ -2,54 +2,59 @@ from tkinter import ttk
 import tkinter as tkr
 import sys
 sys.path.insert(1,"..")
-from utils.database import run_query
+from utils.funtions import run_query
 
 
 class Tree(ttk.Treeview):
-    #Esta clase es para crear un objecto que sirve como componente para la aplicacion
+    #This class is for creating an object that serves as a component for the application.
     """
-        Es una tablero donde muestra los registros actuales de la tabla product.
+        It is a dashboard where it shows the current records of the product table.
     """
 
-    def __init__(self, field_name, i, j):
+    def __init__(self, i, j):
         """
-            Inicializa el objecto y lo ubica.
+            Initializes the object and places it in the grid.
 
-            self: Es para acceder a cualquier atributo o metodo de la clase.
-            field_name: Lista con los nombres de los campos.
-            i: Fila en que se ubica en la grilla
-            j: Columna en que se ubica en la grilla
+            self: It is to access any attribute or method of the class.
+            i: Receives an integer that is the row in which it is located in the grid.
+            j: Receives an integer that is the column in which it is located in the grid.
         """
 
-        #Determina el alto y el numero de columnas
-        super().__init__(height=10,columns=2)
+        #Overload the parent constructor, determining the height and the number of columns
+        #three in this case.
+        super().__init__(height=15,columns = [f"#{n}" for n in range(1, 4)])
 
-        #Ubicacion en la grilla
-        self.grid(row = i, column = j, columnspan = 2)
+        #It is configured to show the headers.
+        self.config(show='headings')
+        #Location in the grid.
+        self.grid(row = i, column = j, columnspan=2)
 
-        #Se imprime los cabezales
-        for index, field in enumerate(field_name):
-            self.heading(f"#{index}", text = field, anchor = tkr.CENTER)
+        #The heads are printed.
+        self.heading('#1', text='ID', anchor = tkr.CENTER)
+        self.heading('#2', text='Name', anchor = tkr.CENTER)
+        self.heading('#3', text='Price',anchor = tkr.CENTER)
 
     def get_products(self):
         """
-            Actualiza el tableto deacuerdo a los registros actuales de
-            la tabla product en la base de datos
+            Update the table according to the current records of
+            the product table in the database.
+
+            self: It is to access any attribute or method of the class.
         """
 
-        #Obtiene los antiguos registros
+        #Get the old records.
         records = self.get_children() 
 
-        #Los elimina
+        #Removes them
         for element in records:
             self.delete(element)
 
-        #Ejecuta la consulta
+        #Run the query.
         query = "SELECT * FROM product ORDER BY name DESC"
         db_rows = run_query(query = query)
 
-        #Inserta los actuales registros en el tablero
+        #Insert the current records into the board.
         for row in db_rows:
-            self.insert('', 0, text = row[1], values = row[2])
+            self.insert('', tkr.END, values=row)
 
 

@@ -1,6 +1,6 @@
 import tkinter as tkr
 from components.root import Root
-from utils.database import run_query
+from utils.funtions import run_query, validation
 from components.field import Field
 from components.tree import Tree
 from components.edit_window import EditWindow
@@ -11,148 +11,173 @@ from components.submit_button import SubmitButton
 class App(tkr.LabelFrame):
 
     """
-        Es la aplicacion ya armada.
+        It is the application already built.
 
-        __name: Es el campo para guardar el nombre del producto.
-        __price: Es el campo para guardar el precio del producto.
-        __message: Es para ir actualizando el componente mensaje.
-        __tree: Es el tablero con los registros.
+        __name: It is the field to store the name of the product.
+        __price: It is the field to store the price of the product.
+        __message: It is to update the message.
+        __tree: It is the board with the records.
     """
 
     def __init__(self, container):
+
+
+        """
+            Initialize the application.
+
+            self: It is to access any attribute or method of the class.
+            container: container: receives a widget object that is the
+            container of everything, which will be the Root component.
+        """
+
+        #Overload the parent constructor.
         super().__init__(container, text = "Add a new product")
+
+        #Location in the container
         super().grid(row = 0, column = 0, columnspan = 3, pady = 20, padx = 5)
 
-        #Campo para el nombre del producto
+        #Field for the product name.
         self.__name = Field(self,"Name",1,0,True)
 
-        #Campo para el nombre del producto
+        #Field for product price.
         self.__price = Field(self,"Price",2,0)
 
-        #Mensaje de aviso
+        #Warning message.
         self.__message = Message()
         
-        #Boton para guardar regitros
-        SubmitButton(container = self, text = "Save Product", i = 3, spancol = 2, command = self.add_product)
+        #Button to save the records.
+        SubmitButton(
+            container = self,
+            text = "Save Product",
+            i = 3, spancol = 2,
+            command = self.add_product
+        )
         
-        #Tablero con los registros
-        self.__tree = Tree(field_name=["Name","Price"], i = 4, j = 0)
+        #Board with the records.
+        self.__tree = Tree( i = 4, j = 0)
 
-        #Boton de borrar y editar
-        Panel(delete_command = self.delete_product, edit_command = self.edit_product)
+        #Button to delete and edit.
+        Panel(
+            delete_command = self.delete_product,
+            edit_command = self.edit_product
+        )
 
-        #Da el tablero de registros actualizado
+        #The board with the updated records.
         self.__tree.get_products()
-
-    def validation(self):
-
-        """
-            Valida si ambos campos estan vacios o no.
-
-            self: Es para acceder a cualquier atributo o metodo de la clase.
-        """
-
-        return self.__name.get_length() > 0 and self.__price.get_length() > 0 
 
     def add_product(self):
         """
-            Es lo que se ejecuta al presionar el boton de guarsar, hace la consulta
-            para agregar un nuevo registro en el tablero.
+            It is the function that is executed when pressing the save button, it makes the query
+            to add a new record to the dashboard.
 
-            self: Es para acceder a cualquier atributo o metodo de la clase.
+            self: It is to access any attribute or method of the class.
         """
 
-        #Primero verifica si los campos estan llenos
-        if self.validation():
-            #Se hace la consulta
+        #First check if the fields are filled.
+        if validation(self.__name.get_value(), self.__price.get_value()):
+            #Run the query.
             query = "INSERT INTO product VALUES(null,?,?)"
-            run_query(query = query, parameters = (self.__name.get_value(), self.__price.get_value()))
-            #Se da el mensaje que la consulta fue exitosa
+            run_query(
+                query = query,
+                parameters = (self.__name.get_value(), self.__price.get_value())
+            )
+           #The message that the query was successful is given.
             self.__message['text'] = f"Product {self.__name.get_value()} added successfully"
-            #Se reinicia los campos, para que vuelvan ser vacios
+           #The fields are reset, so that they are empty again.
             self.__name.reboot()
             self.__price.reboot()
         else:
-            #Se da el mensaje que se requiere ambos campos
+            #The message is given that both fields are required.
             self.__message['text'] = f"Name and Price are requerid"
         
-        #Da el tablero de registros actualizado
+        #Dashboard is updated.
         self.__tree.get_products()
 
 
     def delete_product(self):
         """
-            Es lo que se ejecuta al presionar el boton de borrar, hace la consulta
-            para borrar un registro seleccionado en el tablero.
+            It is the function that is executed when pressing the delete button, it makes the query
+            to delete a selected record on the board.
 
-            self: Es para acceder a cualquier atributo o metodo de la clase.
+            self: It is to access any attribute or method of the class.
         """
 
         self.__message['text'] = ""
 
         try:
-            #Verifica si hay un record seleccionado
-            self.__tree.item(self.__tree.selection())['text'][0]
+            #Check if there is a record selected.
+            self.__tree.item(self.__tree.selection())['values'][0]
         except IndexError as e:
-            #Se da el mensaje que se requiere seleccionar un record
+            #The message is given that it is required to select a record.
             self.__message['text'] = "Please Select a Record"
             return
         
         self.__message['text'] = ""
-        #Obtiene el nombre del producto, por el record seleccionado
-        name_product = self.__tree.item(self.__tree.selection())['text']
-        #Se hace la consulta
-        query = "DELETE FROM product WHERE name= ?"
-        run_query(query = query, parameters=(name_product,))
-        #Se da el mensaje que la consulta fue exitosa
+        
+        #Get the ID of the product, for the selected record.
+        id = self.__tree.item(self.__tree.selection())['values'][0]
+        #Get the name of the product, for the selected record.
+        name_product = self.__tree.item(self.__tree.selection())['values'][1]
+        #Run the query.
+        query = "DELETE FROM product WHERE id= ?"
+        run_query(query = query, parameters=(id,))
+        #The message that the query was successful is given.
         self.__message['text'] = f"Record {name_product} deleted successfully"
-        #Da el tablero de registros actualizado
+        #Dashboard is updated.
         self.__tree.get_products()
         
     def edit_record(self, update_parameters=()):
         """
-            Hace la consulta para actulizar un registro seleccionado
-            en el tablero.
+            Makes the query to update a record in the product table.
 
-            self: Es para acceder a cualquier atributo o metodo de la clase.
-            update_parameters: Es una tupla con los parametros para actualizar
-            (nombre_nuevo, precio_nuevo, nombre_viejo, precio_viejo).
+            self: It is to access any attribute or method of the class.
+            update_parameters: Receive a tuple with the parameters to update
+            (new_name, new_price, id).
         """
 
-        #Se hace la consulta
-        query = "UPDATE product set name = ?, price = ? WHERE name = ? AND price = ?"
+        #Run the query.
+        query = "UPDATE product set name = ?, price = ? WHERE id= ?"
         run_query(query = query, parameters = update_parameters)
-        #Se da el mensaje que la consulta fue exitosa
+        #The message that the query was successful is given.
         self.__message['text'] = "Update successfully"
-        #Da el tablero de registros actualizado
+        #Dashboard is updated.
         self.__tree.get_products()
 
     def edit_product(self):
         """
-             Es lo que se ejecuta al presionar el boton de editar.
+            It is the function that is executed when pressing the edit
+            button, it opens a small window where the new values ​​will be entered.
 
-            self: Es para acceder a cualquier atributo o metodo de la clase.
+            self: It is to access any attribute or method of the class.
         """
         self.__message['text'] = ""
 
         try:
-            #Verifica si hay un record seleccionado
-            self.__tree.item(self.__tree.selection())['text'][0]
+            #Check if there is a record selected.
+            self.__tree.item(self.__tree.selection())['values'][0]
         except IndexError as e:
-            #Se da el mensaje que se requiere seleccionar un record
+            #The message is given that it is required to select a record.
             self.__message['text'] = "Please Select a Record"
             return
         self.__message['text'] = ""
         
-        #Obtiene el nombre del producto, por el record seleccionado
-        name_product = self.__tree.item(self.__tree.selection())['text']
-        #Obtiene el nombre del precio, por el record seleccionado
-        price_product = self.__tree.item(self.__tree.selection())['values'][0]
-        #Se abre la ventana emergente, para ingresar los nuevos valores
-        EditWindow(name_product, price_product, edit_command = self.edit_record)
+        #Get the product ID of the selected record.
+        id = self.__tree.item(self.__tree.selection())['values'][0]
+
+        #Get the product name of the selected record.
+        name_product = self.__tree.item(self.__tree.selection())['values'][1]
+        #Get the price of the product of the selected record.
+        price_product = self.__tree.item(self.__tree.selection())['values'][2]
+       # The pop-up window opens, to enter the new values
+        EditWindow(
+            id = id,
+            old_name = name_product,
+            old_price= price_product,
+            edit_command = self.edit_record
+        )
         
     
-#Aqui se ejecuta la app
+#This is where the app runs
 if __name__ == "__main__":
     window = Root()
     app = App(window)

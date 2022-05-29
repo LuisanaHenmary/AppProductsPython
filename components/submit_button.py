@@ -1,22 +1,23 @@
 import tkinter as tkr
 
 class SubmitButton(tkr.Button):
-     #Esta clase es para crear un objecto que sirve como componente para la aplicacion
+     #This class is for creating an object that serves as a component for the application.
     """
-        Es un boton para enviar los datos.
+        It is a button to send the data.
     """
     def __init__(self, container, text, command, spancol, i):
         """
             Inicializa el objecto y lo ubica.
             
-            self: Es para acceder a cualquier atributo o metodo de la clase.
-            container: Contenedor del campo.
-            text: Texto del boton.
-            command: Funcion que se ejecuta al presinarlo.
-            spancol: Es para determinar cuantas columnas puede ocupar.
-            i: Fila en que se ubica en la grilla.
+            self: It is to access any attribute or method of the class.
+            container: Receives a widget object that is the container for everything.
+            text: Receive a string indicating the function of the button.
+            command: Receive a function that is executed when pressed.
+            spancol: Receives an integer that determines how many columns the button can occupy.
+            i: Receives an integer that is the row in which it is located in the grid.
         """
+        #Overload the parent constructor.
         super().__init__(container, text = text, command = command)
-        #Ubicacion en la grilla
+        #Location in the grid.
         self.grid(row = i, columnspan = spancol, sticky = tkr.W + tkr.E)
 
